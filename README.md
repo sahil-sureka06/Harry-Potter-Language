@@ -27,3 +27,4 @@ This extension provides syntax highlighting and the ability to run your code dir
 ## Requirements
 
 You must have **Python 3** installed on your system for the interpreter to work.
+# Harry-Potter-Language
