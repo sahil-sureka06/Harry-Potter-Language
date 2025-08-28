@@ -1,0 +1,104 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Magic",
+  "scopeName": "source.magic",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#constants" },
+    { "include": "#builtins" },
+    { "include": "#operators" },
+    { "include": "#numbers" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.magic",
+          "match": "#.*"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.magic",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.magic",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.magic",
+          "match": "\\b(IF|THEN|ELIF|ELSE|FOR|TO|STEP|WHILE|FUN|END|RETURN|CONTINUE|BREAK)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.magic",
+          "match": "\\b(AND|OR|NOT)\\b"
+        },
+        {
+          "name": "keyword.storage.type.magic",
+          "match": "\\b(VAR)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.magic",
+          "match": "\\b(NULL|FALSE|TRUE|MATH_PI)\\b"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.magic",
+          "match": "\\b(PRINT|PRINT_RET|INPUT|INPUT_INT|CLEAR|CLS|IS_NUM|IS_STR|IS_LIST|IS_FUN|APPEND|POP|EXTEND|LEN|RUN)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.magic",
+          "match": "==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.assignment.magic",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.arithmetic.magic",
+          "match": "\\+|-|\\*|/|\\^"
+        },
+        {
+          "name": "keyword.operator.arrow.magic",
+          "match": "->"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.magic",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.definition.magic",
+          "match": "[\\(\\)\\[\\],;]"
+        }
+      ]
+    }
+  }
+}

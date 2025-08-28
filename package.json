@@ -1,0 +1,75 @@
+{
+  "name": "harry-potter-language",
+  "displayName": "Harry Potter Language",
+  "description": "A magical language for writing spells.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/sahil-sureka06/Harry-Potter-Language.git"
+},
+  "activationEvents": [
+    "onLanguage:harrypotter",
+    "onCommand:harrypotter.run"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [{
+      "id": "harrypotter",
+      "aliases": ["Harry Potter", "harrypotter"],
+      "extensions": [".magic"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "harrypotter",
+      "scopeName": "source.magic",
+      "path": "./syntaxes/magic.tmLanguage.json"
+    }],
+    "commands": [{
+      "command": "harrypotter.run",
+      "title": "Harry Potter: Run Spell File",
+      "icon": "$(play)"
+    }],
+    "keybindings": [
+      {
+        "command": "harrypotter.run",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorLangId == harrypotter"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "harrypotter.run",
+          "when": "editorLangId == harrypotter",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "20.2.5",
+    "eslint": "^8.41.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.3",
+    "@vscode/test-electron": "^2.3.2"
+  }
+}
