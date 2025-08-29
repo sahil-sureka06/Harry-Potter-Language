@@ -2,7 +2,9 @@
   "name": "harry-potter-language",
   "displayName": "Harry Potter Language",
   "description": "A magical language for writing spells.",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "publisher": "sahil-sureka06",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -10,9 +12,9 @@
     "Programming Languages"
   ],
   "repository": {
-  "type": "git",
-  "url": "https://github.com/sahil-sureka06/Harry-Potter-Language.git"
-},
+    "type": "git",
+    "url": "https://github.com/sahil-sureka06/Harry-Potter-Language.git"
+  },
   "activationEvents": [
     "onLanguage:harrypotter",
     "onCommand:harrypotter.run"

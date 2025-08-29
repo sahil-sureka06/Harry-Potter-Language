@@ -36,15 +36,15 @@
       "patterns": [
         {
           "name": "keyword.control.magic",
-          "match": "\\b(IF|THEN|ELIF|ELSE|FOR|TO|STEP|WHILE|FUN|END|RETURN|CONTINUE|BREAK)\\b"
+          "match": "\\b(Expecto|Cast|Also|Patronum|Repeat|Until|By|Loop|Spell|Finite|OwlPost|Skip|Evanesco)\\b"
         },
         {
           "name": "keyword.operator.logical.magic",
-          "match": "\\b(AND|OR|NOT)\\b"
+          "match": "\\b(And|Or|Not)\\b"
         },
         {
           "name": "keyword.storage.type.magic",
-          "match": "\\b(VAR)\\b"
+          "match": "\\b(Scroll)\\b"
         }
       ]
     },
@@ -52,7 +52,7 @@
       "patterns": [
         {
           "name": "constant.language.magic",
-          "match": "\\b(NULL|FALSE|TRUE|MATH_PI)\\b"
+          "match": "\\b(Obliviate|Nox|Lumos|MATH_PI)\\b"
         }
       ]
     },
@@ -60,7 +60,7 @@
       "patterns": [
         {
           "name": "support.function.builtin.magic",
-          "match": "\\b(PRINT|PRINT_RET|INPUT|INPUT_INT|CLEAR|CLS|IS_NUM|IS_STR|IS_LIST|IS_FUN|APPEND|POP|EXTEND|LEN|RUN)\\b"
+          "match": "\\b(Revelio|PRINT_RET|Accio|INPUT_INT|Scourgify|CLS|IS_NUM|IS_STR|IS_LIST|IS_FUN|Pack|Unpack|Combine|Measure|MaraudersMap)\\b"
         }
       ]
     },

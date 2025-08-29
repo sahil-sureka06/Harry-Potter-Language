@@ -1499,13 +1499,6 @@ class String(Value):
     super().__init__()
     self.value = value
 
-  def get_comparison_eq(self, other):
-    if isinstance(other, String):
-      return Number(int(self.value == other.value)).set_context(self.context), None
-    else:
-      return None, Value.illegal_operation(self, other)
-  
-
   def added_to(self, other):
     if isinstance(other, String):
       return String(self.value + other.value).set_context(self.context), None
