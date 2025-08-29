@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
                 const shellPath = path.join(extensionPath, 'shell1.py');
 
                 // This is the full command we want to run in the terminal
-                const pythonCommand = `python3 "${shellPath}" "${filePath}"`;
+                const pythonCommand = `python "${shellPath}" "${filePath}"`;
 
                 // If our terminal is closed, create a new one
                 if (!harryPotterTerminal || harryPotterTerminal.exitStatus !== undefined) {
