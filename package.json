@@ -2,7 +2,7 @@
   "name": "harry-potter-language",
   "displayName": "Harry Potter Language",
   "description": "A magical language for writing spells.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "sahil-sureka06",
   "icon": "icon.png",
   "engines": {

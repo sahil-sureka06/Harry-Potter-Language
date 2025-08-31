@@ -38,6 +38,133 @@ Here’s your quick reference guide to all the magical keywords and their Muggle
 | `Pack` / `Unpack`     | **APPEND / POP**       | Packs an item into a list or unpacks one. |
 
 ---
+---
+
+## The Harry Potter Language Documentation 🪄
+This documentation serves as a guide for writing spells in the Harry Potter Language. The language is dynamically typed and comes with a VS Code extension for a complete magical experience.
+
+### 🧾 General
+A program is a sequence of statements. Comments start with **#**. The **.magic** file extension is the official file type for all spells.
+
+***Note***:  The language is case-sensitive, so **Scroll** is a keyword, but **scroll** would be a variable name.
+
+
+```magic
+# This is a spell
+Scroll myPotion = 10
+Revelio(myPotion)
+```
+
+### 📦 Variables
+Variables are declared using the **Scroll** keyword, followed by an identifier and an equals sign **=**.
+
+```magic
+Scroll myPoints = 10
+Scroll favoriteSpell = "Wingardium Leviosa"
+Scroll ingredients = [10, 5, 15]
+```
+
+### 🔤 Types
+Numbers (integers and floats), strings, lists, and functions are the core types.
+
+```magic
+Scroll myPoints = 10
+Scroll studentName = "Harry Potter"
+Scroll hogwartsHouses = ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"]
+
+# Magical Constants
+Scroll isTrue = Lumos
+Scroll isFalse = Nox
+Scroll noValue = Obliviate
+
+```
+
+### ⚡ Conditionals
+The language supports a full conditional chain using **Expecto** (if), **Also** (else if), and **Patronum** (else). The **Cast** keyword must follow each condition.
+
+For multiple statements within a block, simply place them on new lines. The entire structure must end with **Finite**.
+
+```magic
+Scroll housePoints = 75
+
+Expecto housePoints > 100 Cast
+    Revelio("Gryffindor wins the House Cup!")
+Also housePoints > 50 Cast
+    Revelio("A valiant effort! More points are needed.")
+    Revelio("Let's add 10 more for good measure!")
+Patronum
+    Revelio("The hourglasses are nearly empty.")
+Finite
+```
+
+### 🛠️ Built-ins
+The **Revelio()** charm prints anything to the console.
+The **Accio()** charm summons input from the user.
+
+```magic
+Revelio("Hello, wizard!")
+Revelio("What is your favorite spell?")
+Scroll myFavoriteSpell = Accio()
+Revelio("Ah, " + myFavoriteSpell + ", a classic!")
+```
+
+### ➕ Operators
+The language supports standard arithmetic, logical, and comparison operators.
+``` text
++ - * / ^
+And Or Not
+== != < > <= >=
+```
+```magic
+Scroll score = 100
+Scroll bonus = 20
+Scroll total = score + bonus
+Revelio(total == 120)
+```
+
+### 🔁 Loops
+Statements inside **Loop...Cast** and **Repeat...Cast** blocks are executed as long as a specified condition is **Lumos** (true).
+
+Use **Evanesco** to break the loop and **Flipendo** to continue to the next iteration.
+
+The entire structure must end with **Finite**.
+
+#### For Loop (Repeat)
+```magic
+# Repeat i from 1 to 3
+Repeat i = 1 Until 4 Cast
+    Revelio("Stirring potion...")
+Finite
+```
+#### While Loop (Loop)
+```magic
+Scroll i = 0
+Loop i < 3 Cast
+    Revelio("Casting spell number:")
+    Revelio(i)
+    Scroll i = i + 1
+Finite
+```
+### 🪄 Functions (Spell)
+You can create your own reusable spells (functions) using the **Spell** keyword.
+Spells can take arguments and send back a result using **OwlPost**.
+
+The entire structure must end with **Finite**.
+
+```magic
+# A spell to double a number of house points
+Spell doublePoints(points)
+  OwlPost points * 2
+Finite
+
+Scroll gryffindorPoints = 50
+Scroll finalPoints = doublePoints(gryffindorPoints)
+Revelio("Gryffindor's points have been doubled to:")
+Revelio(finalPoints)
+```
+
+
+---
 
 
 ## 🎓 Quick Start: The Sorting Hat Ceremony
@@ -48,6 +175,7 @@ Let’s cast a simple, interactive spell where the Sorting Hat asks for your nam
 2. Write your spell:
 
 ```magic
+
 # The Sorting Hat Ceremony
 
 Revelio("Welcome to Hogwarts, young wizard!")
@@ -65,18 +193,10 @@ Patronum
   # You belong with the snakes! 🐍
   Revelio(name + ", your ambition shows you belong in... SLYTHERIN!")
 Finite
+
 ```
 
-3. Cast your spell using one of these methods:
-   - Click the **Play button (▶️)** in the top-right corner of the editor.
-   - Use the keyboard shortcut:
-     - **Mac**: `Cmd + Alt + R`
-     - **Windows/Linux**: `Ctrl + Alt + R`
-
----
-
-## 🐍 The Muggle Equivalent (Python)
-
+### 🐍 The Muggle Equivalent (Python)
 To understand the logic behind the magic, here is the exact same program in Python:
 
 ```python
@@ -96,10 +216,28 @@ else:
     print(name + ", your ambition shows you belong in... SLYTHERIN!")
 ```
 
+
+
+3. Cast your spell using one of these methods:
+   - Click the **Play button (▶️)** in the top-right corner of the editor.
+   - Use the keyboard shortcut:
+     - **Mac**: `Cmd + Alt + R`
+     - **Windows/Linux**: `Ctrl + Alt + R`
+
+
 ---
+
 
 ## 📜 Requirements
 - Python 3 must be installed and accessible from your system's terminal for the interpreter to work.
+
+---
+## 📂 Source Code & Contributing
+
+This project is fully open-source. You can view the source code, report issues, or contribute to the project on GitHub.
+
+🔗 [**View the GitHub Repository**](https://github.com/sahil-sureka06/Harry-Potter-Language)
+
 
 ---
 

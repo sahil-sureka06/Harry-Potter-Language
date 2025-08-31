@@ -10,7 +10,7 @@ if len(sys.argv) < 2:
 filename = sys.argv[1]
 
 try:
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         text = f.read()
 except FileNotFoundError:
     print(f"Error: File not found at '{filename}'")
