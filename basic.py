@@ -124,6 +124,7 @@ TT_EOF				= 'EOF'
 
 KEYWORDS = [
   'Scroll',
+  'Reparo',
   'And',
   'Or',
   'Not',
@@ -351,13 +352,16 @@ class Lexer:
 
     return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
+  # Replace the old skip_comment method with this one
+
   def skip_comment(self):
     self.advance()
 
-    while self.current_char != '\n':
+    # The new condition also checks if we've reached the end of the file
+    while self.current_char is not None and self.current_char != '\n':
       self.advance()
 
-    self.advance()
+    # No need to advance again here, as the main loop will handle it.
 
 #######################################
 # NODES
@@ -398,6 +402,16 @@ class VarAccessNode:
     self.pos_end = self.var_name_tok.pos_end
 
 class VarAssignNode:
+  def __init__(self, var_name_tok, value_node):
+    self.var_name_tok = var_name_tok
+    self.value_node = value_node
+
+    self.pos_start = self.var_name_tok.pos_start
+    self.pos_end = self.value_node.pos_end
+
+# In the NODES section, after VarAssignNode
+
+class VarReassignNode:
   def __init__(self, var_name_tok, value_node):
     self.var_name_tok = var_name_tok
     self.value_node = value_node
@@ -578,7 +592,7 @@ class Parser:
     res = ParseResult()
     statements = []
     pos_start = self.current_tok.pos_start.copy()
-
+    
     while self.current_tok.type == TT_NEWLINE:
       res.register_advancement()
       self.advance()
@@ -615,6 +629,32 @@ class Parser:
   def statement(self):
     res = ParseResult()
     pos_start = self.current_tok.pos_start.copy()
+
+    if self.current_tok.matches(TT_KEYWORD, 'Reparo'):
+      res.register_advancement()
+      self.advance()
+
+      if self.current_tok.type != TT_IDENTIFIER:
+        return res.failure(InvalidSyntaxError(
+          self.current_tok.pos_start, self.current_tok.pos_end,
+          "Expected identifier"
+        ))
+
+      var_name = self.current_tok
+      res.register_advancement()
+      self.advance()
+
+      if self.current_tok.type != TT_EQ:
+        return res.failure(InvalidSyntaxError(
+          self.current_tok.pos_start, self.current_tok.pos_end,
+          "Expected '='"
+        ))
+
+      res.register_advancement()
+      self.advance()
+      expr = res.register(self.expr())
+      if res.error: return res
+      return res.success(VarReassignNode(var_name, expr))
 
     if self.current_tok.matches(TT_KEYWORD, 'OwlPost'):
       res.register_advancement()
@@ -1386,9 +1426,15 @@ class Number(Value):
     super().__init__()
     self.value = value
 
+  # Replace the old added_to method with this new one
+
   def added_to(self, other):
     if isinstance(other, Number):
+      # If adding another number, do math.
       return Number(self.value + other.value).set_context(self.context), None
+    elif isinstance(other, String):
+      # If adding a string, convert self to a string and concatenate.
+      return String(str(self.value) + other.value).set_context(self.context), None
     else:
       return None, Value.illegal_operation(self, other)
 
@@ -1507,8 +1553,10 @@ class String(Value):
   
 
   def added_to(self, other):
-    if isinstance(other, String):
-      return String(self.value + other.value).set_context(self.context), None
+  # If the other item is a String or a Number...
+    if isinstance(other, String) or isinstance(other, Number):
+      # ...convert it to a string and concatenate them.
+      return String(self.value + str(other.value)).set_context(self.context), None
     else:
       return None, Value.illegal_operation(self, other)
 
@@ -1700,6 +1748,47 @@ class BuiltInFunction(BaseFunction):
     print(str(exec_ctx.symbol_table.get('value')))
     return RTResult().success(Number.null)
   execute_print.arg_names = ['value']
+
+  # Add this new method inside the BuiltInFunction class
+
+  def execute_murmur(self, exec_ctx):
+    # We use Python's print() with end='' to prevent a new line
+    print(str(exec_ctx.symbol_table.get('value')), end='') 
+    return RTResult().success(Number.null)
+  execute_murmur.arg_names = ['value']
+
+  # Add these two new methods inside the BuiltInFunction class
+
+  def execute_numeris(self, exec_ctx):
+    value = exec_ctx.symbol_table.get('value')
+
+    if isinstance(value, String):
+      try:
+        # Try to convert the string's value to a float
+        number = float(value.value)
+        return RTResult().success(Number(number))
+      except ValueError:
+        return RTResult().failure(RTError(
+          value.pos_start, value.pos_end,
+          f"Could not convert string \"{value.value}\" to a Number.",
+          exec_ctx
+        ))
+    elif isinstance(value, Number):
+        return RTResult().success(value) # It's already a number, just return it
+    else:
+      return RTResult().failure(RTError(
+        value.pos_start, value.pos_end,
+        "Argument must be a string or a number.",
+        exec_ctx
+      ))
+  execute_numeris.arg_names = ['value']
+
+  def execute_verbis(self, exec_ctx):
+    value = exec_ctx.symbol_table.get('value')
+    # Use Python's str() to convert the underlying value
+    string = str(value)
+    return RTResult().success(String(string))
+  execute_verbis.arg_names = ['value']
   
   def execute_print_ret(self, exec_ctx):
     return RTResult().success(String(str(exec_ctx.symbol_table.get('value'))))
@@ -1861,6 +1950,7 @@ class BuiltInFunction(BaseFunction):
   execute_run.arg_names = ["fn"]
 
 BuiltInFunction.print       = BuiltInFunction("print")
+BuiltInFunction.murmur      = BuiltInFunction("murmur")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
 BuiltInFunction.input_int   = BuiltInFunction("input_int")
@@ -1874,6 +1964,8 @@ BuiltInFunction.pop         = BuiltInFunction("pop")
 BuiltInFunction.extend      = BuiltInFunction("extend")
 BuiltInFunction.len					= BuiltInFunction("len")
 BuiltInFunction.run					= BuiltInFunction("run")
+BuiltInFunction.numeris     = BuiltInFunction("numeris")
+BuiltInFunction.verbis      = BuiltInFunction("verbis")
 
 #######################################
 # CONTEXT
@@ -1962,9 +2054,40 @@ class Interpreter:
   def visit_VarAssignNode(self, node, context):
     res = RTResult()
     var_name = node.var_name_tok.value
+
+    # CRITICAL FIX: Check if the variable already exists before creating it.
+    if context.symbol_table.get(var_name) is not None:
+      return res.failure(RTError(
+        node.pos_start, node.pos_end,
+        f"Variable '{var_name}' is already defined. Use 'Reparo' to update its value.",
+        context
+      ))
+
+    # If it doesn't exist, proceed as normal.
     value = res.register(self.visit(node.value_node, context))
     if res.should_return(): return res
 
+    context.symbol_table.set(var_name, value)
+    return res.success(value)
+  
+  # In the Interpreter class, after visit_VarAssignNode
+
+  def visit_VarReassignNode(self, node, context):
+    res = RTResult()
+    var_name = node.var_name_tok.value
+
+    # First, check if the variable exists
+    if context.symbol_table.get(var_name) is None:
+      return res.failure(RTError(
+        node.pos_start, node.pos_end,
+        f"Cannot Reparo '{var_name}' because it has not been declared with 'Scroll'.",
+        context
+      ))
+
+    # If it exists, then get the new value and set it
+    value = res.register(self.visit(node.value_node, context))
+    if res.should_return(): return res
+    
     context.symbol_table.set(var_name, value)
     return res.success(value)
 
@@ -2044,6 +2167,8 @@ class Interpreter:
 
     return res.success(Number.null)
 
+  # Replace the old visit_ForNode method with this one
+
   def visit_ForNode(self, node, context):
     res = RTResult()
     elements = []
@@ -2054,11 +2179,18 @@ class Interpreter:
     end_value = res.register(self.visit(node.end_value_node, context))
     if res.should_return(): return res
 
+    # --- START OF NEW LOGIC ---
     if node.step_value_node:
+      # If the user provides a 'By' step, use it
       step_value = res.register(self.visit(node.step_value_node, context))
       if res.should_return(): return res
     else:
-      step_value = Number(1)
+      # If no 'By' step is given, auto-detect the direction
+      if start_value.value < end_value.value:
+        step_value = Number(1) # Count up
+      else:
+        step_value = Number(-1) # Count down
+    # --- END OF NEW LOGIC ---
 
     i = start_value.value
 
@@ -2066,17 +2198,18 @@ class Interpreter:
       condition = lambda: i < end_value.value
     else:
       condition = lambda: i > end_value.value
-    
+
     while condition():
       context.symbol_table.set(node.var_name_tok.value, Number(i))
+      # The increment/decrement is now handled by the auto-detected step_value
       i += step_value.value
 
       value = res.register(self.visit(node.body_node, context))
       if res.should_return() and res.loop_should_continue == False and res.loop_should_break == False: return res
-      
+
       if res.loop_should_continue:
         continue
-      
+
       if res.loop_should_break:
         break
 
@@ -2170,9 +2303,10 @@ global_symbol_table.set("Nox", Number.false)
 global_symbol_table.set("Lumos", Number.true)
 global_symbol_table.set("MATH_PI", Number.math_PI)
 global_symbol_table.set("Revelio", BuiltInFunction.print)
+global_symbol_table.set("Murmur", BuiltInFunction.murmur)
 global_symbol_table.set("PRINT_RET", BuiltInFunction.print_ret)
 global_symbol_table.set("Accio", BuiltInFunction.input)
-global_symbol_table.set("INPUT_INT", BuiltInFunction.input_int)
+global_symbol_table.set("AccioNum", BuiltInFunction.input_int)
 global_symbol_table.set("Scourgify", BuiltInFunction.clear)
 global_symbol_table.set("CLS", BuiltInFunction.clear)
 global_symbol_table.set("IS_NUM", BuiltInFunction.is_number)
@@ -2184,6 +2318,8 @@ global_symbol_table.set("Unpack", BuiltInFunction.pop)
 global_symbol_table.set("Combine", BuiltInFunction.extend)
 global_symbol_table.set("Measure", BuiltInFunction.len)
 global_symbol_table.set("MaraudersMap", BuiltInFunction.run)
+global_symbol_table.set("Numeris", BuiltInFunction.numeris)
+global_symbol_table.set("Verbis", BuiltInFunction.verbis)
 
 def run(fn, text):
   # Generate tokens

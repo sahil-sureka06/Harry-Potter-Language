@@ -8,8 +8,40 @@
     ["(", ")"]
   ],
   "autoClosingPairs": [
-    { "open": "\"", "close": "\""},
+    { "open": "{", "close": "}" },
+    { "open": "[", "close": "]" },
     { "open": "(", "close": ")" },
-    { "open": "[", "close": "]" }
+    { "open": "\"", "close": "\"", "notIn": ["string"] }
+  ],
+  "surroundingPairs": [
+    ["{", "}"],
+    ["[", "]"],
+    ["(", ")"],
+    ["\"", "\""]
+  ],
+  "folding": {
+    "markers": {
+      "start": "^\\s*\\b(Expecto|Also|Patronum|Repeat|Loop|Spell).*?\\b(Cast|->|\\)|$)",
+      "end": "^\\s*\\b(Finite)\\b"
+    }
+  },
+  "onEnterRules": [
+    {
+      "beforeText": {
+        "pattern": "^\\s*\\b(Expecto|Also|Repeat|Loop|Spell).*?\\b(Cast|->|\\))\\s*$"
+      },
+      "action": {
+        "indent": "indent"
+      }
+    },
+    {
+      "beforeText": {
+        "pattern": "^\\s*\\b(Patronum)\\b\\s*$"
+      },
+      "action": {
+        "indent": "indent"
+      }
+    }
   ]
 }
+

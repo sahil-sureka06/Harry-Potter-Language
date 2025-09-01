@@ -2,10 +2,45 @@ import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import * as path from 'path';
 
-// We'll store a reference to our terminal so we can reuse it
+// --- START: New Code for Keyword Suggestions ---
+
+// A list of all the keywords in your language
+const KEYWORDS = [
+    'Scroll', 'Reparo', 'Revelio', 'Murmur', 'Accio', 'AccioNum',
+    'Expecto', 'Cast', 'Also', 'Patronum', 'Finite',
+    'Repeat', 'Until', 'By', 'Loop',
+    'Spell', 'OwlPost',
+    'Evanesco', 'Skip',
+    'And', 'Or', 'Not',
+    'Lumos', 'Nox', 'Obliviate',
+    'Numeris', 'Verbis',
+    'Pack', 'Unpack', 'Measure', 'Combine'
+];
+
+const completionProvider = vscode.languages.registerCompletionItemProvider(
+    'harrypotter', // This must match the language ID in your package.json
+    {
+        provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+            
+            // Create a simple completion item for each keyword
+            const completionItems = KEYWORDS.map(keyword => {
+                const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
+                return item;
+            });
+
+            return completionItems;
+        }
+    }
+);
+// --- END: New Code for Keyword Suggestions ---
+
+
 let harryPotterTerminal: vscode.Terminal | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
+
+    // --- Add the new completion provider to the context ---
+    context.subscriptions.push(completionProvider);
 
     let disposable = vscode.commands.registerCommand('harrypotter.run', () => {
         const editor = vscode.window.activeTextEditor;
@@ -14,25 +49,20 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage('No active editor. Open a .magic file to run a spell.');
             return;
         }
-
+        
         const document = editor.document;
         const filePath = document.fileName;
-
-        // Save the file before running
+        
         document.save().then(saved => {
             if (saved) {
                 const extensionPath = context.extensionPath;
                 const shellPath = path.join(extensionPath, 'shell1.py');
-
-                // This is the full command we want to run in the terminal
                 const pythonCommand = `python "${shellPath}" "${filePath}"`;
 
-                // If our terminal is closed, create a new one
                 if (!harryPotterTerminal || harryPotterTerminal.exitStatus !== undefined) {
                     harryPotterTerminal = vscode.window.createTerminal("Harry Potter Output");
                 }
-
-                // Show the terminal to the user and send the command to be executed
+                
                 harryPotterTerminal.show();
                 harryPotterTerminal.sendText(pythonCommand);
             }
@@ -43,7 +73,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    // Clean up the terminal when the extension is deactivated
     if (harryPotterTerminal) {
         harryPotterTerminal.dispose();
     }

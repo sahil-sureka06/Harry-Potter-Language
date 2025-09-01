@@ -43,8 +43,8 @@
           "match": "\\b(And|Or|Not)\\b"
         },
         {
-          "name": "keyword.storage.type.magic",
-          "match": "\\b(Scroll)\\b"
+          "name": "keyword.storage.magic",
+          "match": "\\b(Scroll|Reparo)\\b"
         }
       ]
     },
@@ -60,7 +60,7 @@
       "patterns": [
         {
           "name": "support.function.builtin.magic",
-          "match": "\\b(Revelio|PRINT_RET|Accio|INPUT_INT|Scourgify|CLS|IS_NUM|IS_STR|IS_LIST|IS_FUN|Pack|Unpack|Combine|Measure|MaraudersMap)\\b"
+          "match": "\\b(Revelio|Murmur|PRINT_RET|Accio|AccioNum|Scourgify|CLS|IS_NUM|IS_STR|IS_LIST|IS_FUN|Pack|Unpack|Combine|Measure|MaraudersMap|Numeris|Verbis)\\b"
         }
       ]
     },
