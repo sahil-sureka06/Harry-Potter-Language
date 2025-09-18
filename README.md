@@ -38,7 +38,7 @@ Here’s your quick reference guide to all the magical keywords and their Muggle
 | `Lumos` / `Nox`       | **TRUE / FALSE**       | Represents logical states of true and false. |
 | `Obliviate`           | **NULL**               | Represents a null or empty value. |
 | `Scourgify`           | **CLEAR**              | Clears the terminal screen. |
-| `Measure`             | **LEN**                | Measures the number of items in a list. |
+| `Measure`             | **LEN**                | Measures the number of items in a list or String. |
 | `Pack` / `Unpack`     | **APPEND / POP**       | Packs an item into a list or unpacks one. |
 
 ---
@@ -138,11 +138,21 @@ The language supports standard arithmetic, logical, and comparison operators.
 `And Or Not`,
 `== != < > <= >=`
 
+You can get a specific element from a List or a character from a String using the `/` operator. Indexing starts at 0.
+
+
 ```magic
 Scroll score = 100
 Scroll bonus = 20
 Scroll total = score + bonus
 Revelio(total == 120)
+# Accessing a list element
+Scroll houses = ["Gryffindor", "Slytherin"]
+Revelio(houses / 1) # Prints "Slytherin"
+# Accessing a string character
+Scroll spell = "Alohomora"
+Revelio(spell / 0) # Prints "A"
+
 ```
 
 ### 🔁 Loops

@@ -1544,6 +1544,25 @@ class String(Value):
   def __init__(self, value):
     super().__init__()
     self.value = value
+  
+  # Add this new method inside the String class in basic.py
+
+  def dived_by(self, other):
+    if isinstance(other, Number):
+      try:
+        # Get the character at the specified index
+        char = self.value[other.value]
+        # Return the character as a new String
+        return String(char).set_context(self.context), None
+      except IndexError:
+        # If the index is out of range, create a runtime error
+        return None, RTError(
+          other.pos_start, other.pos_end,
+          'Character at this index could not be retrieved because index is out of bounds',
+          self.context
+        )
+    else:
+      return None, Value.illegal_operation(self, other)
 
   def get_comparison_eq(self, other):
     if isinstance(other, String):
@@ -1902,17 +1921,23 @@ class BuiltInFunction(BaseFunction):
   execute_extend.arg_names = ["listA", "listB"]
 
   def execute_len(self, exec_ctx):
-    list_ = exec_ctx.symbol_table.get("list")
+    value = exec_ctx.symbol_table.get("value")
 
-    if not isinstance(list_, List):
+    if isinstance(value, List):
+      # If the value is a list, return the number of elements.
+      return RTResult().success(Number(len(value.elements)))
+    elif isinstance(value, String):
+      # If the value is a string, return the number of characters.
+      return RTResult().success(Number(len(value.value)))
+    else:
+      # If it's neither, throw an error.
       return RTResult().failure(RTError(
         self.pos_start, self.pos_end,
-        "Argument must be list",
+        "Argument must be a list or a string.",
         exec_ctx
       ))
-
-    return RTResult().success(Number(len(list_.elements)))
-  execute_len.arg_names = ["list"]
+  
+  execute_len.arg_names = ["value"]
 
   def execute_run(self, exec_ctx):
     fn = exec_ctx.symbol_table.get("fn")
