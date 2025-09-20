@@ -134,7 +134,7 @@ Revelio(points + 10)
 ### ➕ Operators
 The language supports standard arithmetic, logical, and comparison operators.
 
-`+ - * / ^`,
+`+ - * / ^ //`,
 `And Or Not`,
 `== != < > <= >=`
 
@@ -149,10 +149,13 @@ Revelio(total == 120)
 # Accessing a list element
 Scroll houses = ["Gryffindor", "Slytherin"]
 Revelio(houses / 1) # Prints "Slytherin"
+
 # Accessing a string character
 Scroll spell = "Alohomora"
 Revelio(spell / 0) # Prints "A"
 
+#Integer Division
+Revelio(score // 6) # Prints "16"
 ```
 
 ### 🔁 Loops

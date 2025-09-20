@@ -105,6 +105,7 @@ TT_PLUS     	= 'PLUS'
 TT_MINUS    	= 'MINUS'
 TT_MUL      	= 'MUL'
 TT_DIV      	= 'DIV'
+TT_INTDIV     = 'INTDIV'
 TT_POW				= 'POW'
 TT_EQ					= 'EQ'
 TT_LPAREN   	= 'LPAREN'
@@ -121,6 +122,7 @@ TT_COMMA			= 'COMMA'
 TT_ARROW			= 'ARROW'
 TT_NEWLINE		= 'NEWLINE'
 TT_EOF				= 'EOF'
+#...
 
 KEYWORDS = [
   'Scroll',
@@ -205,8 +207,13 @@ class Lexer:
         tokens.append(Token(TT_MUL, pos_start=self.pos))
         self.advance()
       elif self.current_char == '/':
-        tokens.append(Token(TT_DIV, pos_start=self.pos))
+        tok_type = TT_DIV
+        pos_start = self.pos.copy()
         self.advance()
+        if self.current_char == '/':
+          self.advance()
+          tok_type = TT_INTDIV
+        tokens.append(Token(tok_type, pos_start=pos_start, pos_end=self.pos))
       elif self.current_char == '^':
         tokens.append(Token(TT_POW, pos_start=self.pos))
         self.advance()
@@ -748,7 +755,7 @@ class Parser:
     return self.bin_op(self.term, (TT_PLUS, TT_MINUS))
 
   def term(self):
-    return self.bin_op(self.factor, (TT_MUL, TT_DIV))
+    return self.bin_op(self.factor, (TT_MUL, TT_DIV, TT_INTDIV))
 
   def factor(self):
     res = ParseResult()
@@ -1462,6 +1469,14 @@ class Number(Value):
       return Number(self.value / other.value).set_context(self.context), None
     else:
       return None, Value.illegal_operation(self, other)
+  
+  def intdived_by(self, other):
+    if isinstance(other, Number):
+      if other.value == 0:
+        return None, RTError(other.pos_start, other.pos_end, 'Division by zero', self.context)
+      return Number(self.value // other.value).set_context(self.context), None
+    else:
+      return None, Value.illegal_operation(self, other)
 
   def powed_by(self, other):
     if isinstance(other, Number):
@@ -2131,6 +2146,8 @@ class Interpreter:
       result, error = left.multed_by(right)
     elif node.op_tok.type == TT_DIV:
       result, error = left.dived_by(right)
+    elif node.op_tok.type == TT_INTDIV:
+      result, error = left.intdived_by(right)
     elif node.op_tok.type == TT_POW:
       result, error = left.powed_by(right)
     elif node.op_tok.type == TT_EE:
