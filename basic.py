@@ -1823,6 +1823,25 @@ class BuiltInFunction(BaseFunction):
     string = str(value)
     return RTResult().success(String(string))
   execute_verbis.arg_names = ['value']
+
+  def execute_reparo_at(self, exec_ctx):
+    list_ = exec_ctx.symbol_table.get("list")
+    index = exec_ctx.symbol_table.get("index")
+    value = exec_ctx.symbol_table.get("value")
+
+    if not isinstance(list_, List):
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "First argument must be a list.", exec_ctx))
+    
+    if not isinstance(index, Number):
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "Second argument must be a number.", exec_ctx))
+
+    try:
+      list_.elements[index.value] = value
+    except IndexError:
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "Index is out of bounds for this list.", exec_ctx))
+      
+    return RTResult().success(Number.null)
+  execute_reparo_at.arg_names = ["list", "index", "value"]
   
   def execute_print_ret(self, exec_ctx):
     return RTResult().success(String(str(exec_ctx.symbol_table.get('value'))))
@@ -2006,6 +2025,8 @@ BuiltInFunction.len					= BuiltInFunction("len")
 BuiltInFunction.run					= BuiltInFunction("run")
 BuiltInFunction.numeris     = BuiltInFunction("numeris")
 BuiltInFunction.verbis      = BuiltInFunction("verbis")
+BuiltInFunction.reparo_at   = BuiltInFunction("reparo_at")
+
 
 #######################################
 # CONTEXT
@@ -2362,6 +2383,7 @@ global_symbol_table.set("Measure", BuiltInFunction.len)
 global_symbol_table.set("MaraudersMap", BuiltInFunction.run)
 global_symbol_table.set("Numeris", BuiltInFunction.numeris)
 global_symbol_table.set("Verbis", BuiltInFunction.verbis)
+global_symbol_table.set("ReparoAt", BuiltInFunction.reparo_at)
 
 def run(fn, text):
   # Generate tokens

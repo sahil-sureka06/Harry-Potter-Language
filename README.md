@@ -40,6 +40,7 @@ Here’s your quick reference guide to all the magical keywords and their Muggle
 | `Scourgify`           | **CLEAR**              | Clears the terminal screen. |
 | `Measure`             | **LEN**                | Measures the number of items in a list or String. |
 | `Pack` / `Unpack`     | **APPEND / POP**       | Packs an item into a list or unpacks one. |
+| `ReparoAt`             | **LIST UPDATE**              | Updates or "mends" a list by updating the value at a specific index.|
 
 ---
 
@@ -216,6 +217,27 @@ Scroll pointsAsNumber = Numeris(pointsAsString)
 # Now you can perform math
 Reparo pointsAsNumber = pointsAsNumber + 50 
 Revelio("Final points: " + Verbis(pointsAsNumber))
+```
+
+### ✨ List Manipulation
+You can modify lists using these powerful charms.
++ `Pack(list, value)`: Adds a new value to the end of a list.
++ `Unpack(list, index)`: Removes a value from a list at a specific index.
++ `ReparoAt(list, index, newValue)`: Updates the value at a specific index in a list.
+
+
+```magic
+Scroll ingredients = ["Fluxweed", "Knotgrass"]
+Pack(ingredients, "Lacewing flies") # Adds to the end
+Revelio(ingredients)
+
+# Let's fix a mistake at index 0
+ReparoAt(ingredients, 0, "Boomslang Skin")
+Revelio(ingredients)
+
+# We have too much Knotgrass, let's remove it (at index 1)
+Unpack(ingredients, 1)
+Revelio(ingredients)
 ```
 ---
 

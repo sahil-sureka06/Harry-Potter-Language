@@ -7,7 +7,7 @@ Each version represents me adding a new spell, fixing a bug I created while fixi
    
 
 ### Inside the Crypt:
-+ **`harry-potter-language-0.0.6.vsix`** → The current masterpiece (probably has a new bug I haven't found yet).
++ **`harry-potter-language-0.0.7.vsix`** → The current masterpiece (probably has a new bug I haven't found yet).
 + **Older `.vsix` files** → My past experiments in the dark arts of programming language design.
 
 #### This repo is basically a Room of Requirement for my coding drafts:
