@@ -3,5 +3,5 @@ dist
 node_modules
 .vscode-test/
 vsc-extension-quickstart.md
-__pycache__
+__pycache__/
 .DS_Store
